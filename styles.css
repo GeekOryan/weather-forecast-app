@@ -1,0 +1,244 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background: linear-gradient(90deg, blue, dodgerblue);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 42px;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#cityInput {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    width: 300px;
+    outline: none;
+}
+
+#searchBtn {
+    padding: 12px 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    background-color: rgb(67, 161, 255);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#searchBtn:hover {
+    background-color: #45a049;
+}
+
+#currentWeather {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#currentWeather h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#currentWeather p {
+    margin: 10px 0;
+    color: #666;
+    font-size: 16px;
+}
+/*
+.hourly-section {
+    margin: 30px 0;
+}
+
+.hourly-section h3 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#hourlyDisplay {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.hourly-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hourly-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.hourly-card p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+}
+*/
+
+/*Better hourly section cards*/
+.hourly-section {
+    margin: 30px 0;
+}
+
+.hourly-section h3 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#hourlyDisplay {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 20px 0;
+}
+
+.hourly-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px; /* Fixed height for consistency */
+}
+
+.hourly-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.hourly-card p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/*Hourly Buttons*/
+.hourly-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.hourly-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.hourly-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.hourly-btn.active {
+    background-color: white;
+    color: #667eea;
+}
+
+.forecast-button {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.forecast-button button {
+    padding: 10px 25px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    background-color: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.forecast-button button:hover {
+    background-color: #667eea;
+    color: white;
+}
+
+#forecastDisplay {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.forecast-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.forecast-card h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.forecast-card p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+}
