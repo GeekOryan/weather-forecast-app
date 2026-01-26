@@ -6,8 +6,7 @@ let forecast5Btn = document.querySelector("#forecast5");
 let forecastDisplay = document.querySelector("#forecastDisplay");
 let hourlyTitle = document.querySelector("#hourlyTitle");
 
-
-let currentForecastData = null; // Store forecast data globally
+let currentForecastData = null;
 
 // Function to get weather emoji based on description
 function getWeatherEmoji(description) {
@@ -30,39 +29,46 @@ searchBtn.addEventListener("click", async () => {
     }
 
     try {
-        // Fetch current weather
+        // Fetch current weather via serverless function
         console.log("Fetching current weather for:", city);
-        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        let url = `/.netlify/functions/getWeather?city=${encodeURIComponent(city)}&type=current`;
         let response = await fetch(url);
         let data = await response.json();
         console.log("Current weather data:", data);
 
-        // Display current weather in the main card
-        currentWeather.innerHTML = `
-            <h2>${data.name}</h2>
-            <p style="font-size: 60px;">${getWeatherEmoji(data.weather[0].description)}</p>
-            <p><strong>Temperature:</strong> ${data.main.temp}℃</p>
-            <p><strong>Feels like:</strong> ${data.main.feels_like}℃</p>
-            <p><strong>Weather:</strong> ${data.weather[0].description}</p>
-            <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
-            <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
-        `;
+        // Display current weather
+console.log("Full data object:", data);
+console.log("data.weather:", data.weather);
 
-        // Fetch hourly/daily forecast data
+if (data && data.weather && data.weather[0]) {
+    currentWeather.innerHTML = `
+        <h2>${data.name}</h2>
+        <p style="font-size: 60px;">${getWeatherEmoji(data.weather[0].description)}</p>
+        <p><strong>Temperature:</strong> ${data.main.temp}℃</p>
+        <p><strong>Feels like:</strong> ${data.main.feels_like}℃</p>
+        <p><strong>Weather:</strong> ${data.weather[0].description}</p>
+        <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+        <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+    `;
+} else {
+    currentWeather.textContent = "Weather data format error";
+    console.error("Unexpected data structure:", data);
+}
+        // Fetch forecast via serverless function
         console.log("Fetching forecast for:", city);
-        let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+        let forecastUrl = `/.netlify/functions/getWeather?city=${encodeURIComponent(city)}&type=forecast`;
         let forecastResponse = await fetch(forecastUrl);
         let forecastData = await forecastResponse.json();
         console.log("Forecast data:", forecastData);
     
-        // Store forecast data globally so buttons can access it
-        currentForecastData = forecastData.list;
-        
-        // Display today's hourly forecast by default
-        let today = new Date().toDateString();
-        displayHourlyForecast(currentForecastData, today, "Today");
+        // Check if forecastData has list property
+        if (forecastData && forecastData.list) {
+            currentForecastData = forecastData.list;
+            
+            let today = new Date().toDateString();
+            displayHourlyForecast(currentForecastData, today, "Today");
+        }
 
-        // Clear input field
         input.value = "";
     } catch (error) {
         console.error("Full error:", error);
@@ -70,7 +76,7 @@ searchBtn.addEventListener("click", async () => {
     }
 });
 
-// Enter key support - trigger search when Enter is pressed
+// Enter key support
 input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         searchBtn.click();
@@ -79,19 +85,22 @@ input.addEventListener("keypress", (event) => {
 
 // 5-Day Forecast button
 forecast5Btn.addEventListener("click", async () => {
-    let city = input.value || "Johannesburg"; // Default to Johannesburg if no city entered
+    let city = input.value || "Johannesburg";
 
     try {
-        let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+        let url = `/.netlify/functions/getWeather?city=${encodeURIComponent(city)}&type=forecast`;
         let response = await fetch(url);
         let data = await response.json();
         
         console.log("5-day forecast data:", data);
 
-        currentForecastData = data.list;
-        
-        // Display forecast cards (one per day)
-        displayForecast(data.list.slice(0, 40));
+        // Check if data has list property
+        if (data && data.list) {
+            currentForecastData = data.list;
+            displayForecast(data.list.slice(0, 40));
+        } else {
+            forecastDisplay.innerHTML = "<p>No forecast data available</p>";
+        }
     } catch (error) {
         console.error("Error:", error);
         forecastDisplay.innerHTML = "<p>Error loading forecast</p>";
@@ -101,15 +110,13 @@ forecast5Btn.addEventListener("click", async () => {
 function displayForecast(forecastData) {
     forecastDisplay.innerHTML = "";
 
-    // Group forecast data by day
     let dailyData = {};
 
     forecastData.forEach(item => {
         let date = new Date(item.dt * 1000);
-        let day = date.toLocaleDateString("en-US", {weekday: "short", day: "numeric"});
+        let day = date.toLocaleDateString("en-US", {weekday: "short", month: "short", day: "numeric"});
         let dateString = date.toDateString();
 
-        // Only Keep midday forecast (12PM) for each day
         let hour = date.getHours();
         if (hour === 12 || !dailyData[day]) {
             dailyData[day] = {
@@ -119,7 +126,6 @@ function displayForecast(forecastData) {
         }
     });
 
-    // Creating clickable Cards
     Object.keys(dailyData).forEach(day => {
         let item = dailyData[day].item;
         let dateString = dailyData[day].dateString;
@@ -128,7 +134,6 @@ function displayForecast(forecastData) {
         card.classList.add("forecast-card");
         card.style.cursor = "pointer";
 
-        // Click Event
         card.addEventListener("click", () => {
             displayHourlyForecast(currentForecastData, dateString, day);
             document.querySelector(".hourly-section").scrollIntoView({behavior: "smooth"});
@@ -139,33 +144,28 @@ function displayForecast(forecastData) {
             <p style="font-size: 40px;">${getWeatherEmoji(item.weather[0].description)}</p>
             <p><strong>${Math.round(item.main.temp)}℃</strong></p>
             <p>${item.weather[0].description}</p>
-            `;
+        `;
 
-            forecastDisplay.appendChild(card);
+        forecastDisplay.appendChild(card);
     });
 }
 
-// Display hourly forecast (today or tomorrow)
 function displayHourlyForecast(forecastData, targetDateString, dayLabel) {
     let hourlyDisplay = document.querySelector("#hourlyDisplay");
     hourlyDisplay.innerHTML = "";
     
-    // Update title
     hourlyTitle.textContent = `${dayLabel}'s Hourly Forecast`;
 
-    // Filter for target date
     let dayData = forecastData.filter(item => {
         let itemDate = new Date(item.dt * 1000).toDateString();
         return itemDate === targetDateString;
     });
 
-    // If no data
     if (dayData.length === 0) {
         hourlyDisplay.innerHTML = "<p style='color: white; text-align: center;'>No hourly data available.</p>";
         return;
     }
 
-    // Create cards for all time slots
     dayData.forEach(item => {
         let time = new Date(item.dt * 1000);
         let hour = time.toLocaleTimeString("en-US", {hour: "numeric", hour12: true});
