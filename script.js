@@ -6,7 +6,7 @@ let forecast5Btn = document.querySelector("#forecast5");
 let forecastDisplay = document.querySelector("#forecastDisplay");
 let hourlyTitle = document.querySelector("#hourlyTitle");
 
-const apiKey = "4a6045c59ce30a230ffe5e2ee994e246";
+
 let currentForecastData = null; // Store forecast data globally
 
 // Function to get weather emoji based on description
