@@ -2,6 +2,8 @@
 
 A clean and modern weather application that provides current weather conditions and 5-day forecasts for any city worldwide.
 
+## Link to the site: https://weather-prognosticate.netlify.app/
+
 ## Features
 
 - **Current Weather**: Real-time temperature, weather conditions, humidity, and wind speed
