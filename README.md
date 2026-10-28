@@ -34,6 +34,16 @@ variable in Netlify, and in a local `.env` file when using Netlify Dev. Do not
 commit the key to `netlify.toml` or source files. Get a key from
 [OpenWeatherMap](https://openweathermap.org/api).
 
+## Screenshots
+
+| Screenshot 1 | Screenshot 2 |
+|---|---|
+| ![Screenshot 1](<screenshots/Screenshot 2026-10-28 at 21-04-40 Skies — Weather.png>) | ![Screenshot 2](<screenshots/Screenshot 2026-10-28 at 21-04-54 Skies — Weather.png>) |
+
+| Screenshot 3 | Screenshot 4 |
+|---|---|
+| ![Screenshot 3](<screenshots/Screenshot 2026-10-28 at 21-05-01 Skies — Weather.png>) | ![Screenshot 4](<screenshots/Screenshot 2026-10-28 at 21-05-08 Skies — Weather.png>) |
+
 ## Author
 
 GeekOryan
