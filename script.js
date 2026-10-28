@@ -305,18 +305,11 @@ async function fetchAndRender({ city, lat, lon }) {
       forecastUrl = `/.netlify/functions/getWeather?type=forecast&city=${encodeURIComponent(city)}`;
     }
 
-    console.log('URLs:', currentUrl, forecastUrl);
-
     const [currentRes, forecastRes] = await Promise.all([fetch(currentUrl), fetch(forecastUrl)]);
     const [current, forecast] = await Promise.all([currentRes.json(), forecastRes.json()]);
 
-    const rawCurrent = await currentRes.text();
-    console.log('RAW CURRENT RESPONSE:', rawCurrent);
-    const rawForecast = await forecastRes.text();
-    console.log('RAW FORECAST RESPONSE:', rawForecast);
-
-    if (current.cod && current.cod !== 200) {
-      const msg = current.message || 'City not found.';
+    if (!currentRes.ok || !forecastRes.ok || (current.cod && current.cod !== 200)) {
+      const msg = current.message || forecast.message || 'City not found.';
       showError(msg.charAt(0).toUpperCase() + msg.slice(1));
       return;
     }

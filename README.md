@@ -28,7 +28,11 @@ A clean and modern weather application that provides current weather conditions 
 
 ## API Key
 
-This app uses the OpenWeatherMap API. To run it locally, you'll need to replace the API key in `script.js` with your own from [OpenWeatherMap](https://openweathermap.org/api).
+This app uses the OpenWeatherMap API through the Netlify Function at
+`netlify/functions/getWeather.js`. Set `OPENWEATHER_API_KEY` as an environment
+variable in Netlify, and in a local `.env` file when using Netlify Dev. Do not
+commit the key to `netlify.toml` or source files. Get a key from
+[OpenWeatherMap](https://openweathermap.org/api).
 
 ## Author
 

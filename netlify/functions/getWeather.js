@@ -1,9 +1,16 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-  const { city, lat, lon, type } = event.queryStringParameters;
+  const { city, lat, lon, type } = event.queryStringParameters || {};
 
   const apiKey = process.env.OPENWEATHER_API_KEY;
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Weather service is not configured' })
+    };
+  }
 
   let url;
 
@@ -24,12 +31,20 @@ exports.handler = async (event, context) => {
     url = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
   }
 
+  if (!url) {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Invalid weather request' })
+    };
+  }
+
   try {
     const response = await fetch(url);
     const data = await response.json();
 
     return {
-      statusCode: 200,
+      statusCode: response.status,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
