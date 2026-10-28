@@ -305,6 +305,8 @@ async function fetchAndRender({ city, lat, lon }) {
       forecastUrl = `/.netlify/functions/getWeather?type=forecast&city=${encodeURIComponent(city)}`;
     }
 
+    console.log('URLs:', currentUrl, forecastUrl);
+
     const [currentRes, forecastRes] = await Promise.all([fetch(currentUrl), fetch(forecastUrl)]);
     const [current, forecast] = await Promise.all([currentRes.json(), forecastRes.json()]);
 
